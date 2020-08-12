@@ -1,0 +1,32 @@
+body {
+  font-family: Arial;
+}
+
+#kopf_links {
+  float: left;
+  margin: 5px;
+  margin-right: 20px;
+}
+
+#kopf_rechts {
+  height:130px;
+}
+
+h1 {
+	font-size: 1.7em;
+}
+
+h2 {
+	font-size: 1.2em;
+}
+
+th, td {
+  border: 1px solid grey;
+  padding: 3px;
+  padding-left: 8px;
+}
+
+.errormessage {
+    color: red;
+    background-color: yellow;
+}

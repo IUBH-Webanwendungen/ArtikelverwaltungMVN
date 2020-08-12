@@ -1,0 +1,10 @@
+.DS_Store
+build
+private
+target
+/dist/
+*.iml
+.idea
+*.ipr
+nbproject
+build

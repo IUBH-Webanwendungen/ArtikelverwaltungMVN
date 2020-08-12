@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Artikelverwaltung</title>
+        <h:outputStylesheet library="css" name="artikelverwaltung_css.css"/>
+    </h:head>
+    <h:body>
+        <p id="kopf_links"><img src="Logo.png" alt="Hier sollte ein Logo zu sehen sein!" width="200" height="200" border="3px"/></p>
+        <p id="kopf_rechts">
+            <h:outputText value="#{anschrift.firmenname}"/><br />
+            <h:outputText value="#{anschrift.strasse} #{anschrift.hausnummer}"/><br />
+            <h:outputText value="#{anschrift.plz} #{anschrift.ort}"/><br />
+        </p>
+        <br />
+        <h1>Artikelverwaltung</h1>
+        <h2>Artikel erfassen</h2>
+        <h:form>
+            <h:panelGrid columns="3">
+                <h:commandLink value="zurück" action="#{artikelController.zurueck()}" rendered="#{artikelController.index>0}"/>
+                <h:outputText rendered="#{artikelController.index==0}" value=" "/>
+                <h:commandLink value="vor" action="#{artikelController.vor()}" rendered="#{artikelController.groesse>artikelController.index+1}"/>
+                <h:outputText rendered="#{artikelController.groesse==artikelController.index+1}" value=" "/>
+                <br/>
+                
+                <h:outputLabel for="nr" value="Nr:"/>
+                <h:inputText id="nr" value="#{artikelController.artikel.artikelNr}" required="true" />
+                <h:message for="nr" styleClass="errormessage"/>
+                
+                <h:outputLabel for="name" value="Name:"/>
+                <h:inputText id="name" value="#{artikelController.artikel.nameArtikel}" required="true"/>
+                <h:message for="name" styleClass="errormessage"/>
+                
+                <h:outputLabel for="beschreibung" value="Beschreibung:"/>
+                <h:inputText id="beschreibung" value="#{artikelController.artikel.beschreibung}" required="true"/>
+                <h:message for="beschreibung" styleClass="errormessage"/>
+                
+                <h:outputLabel for="preis" value="Preis:"/>
+                <h:inputText id="preis" value="#{artikelController.artikel.preis}" label=" ">
+                    <f:validateDoubleRange minimum="0.0" maximum="1000000.0" />
+                    <f:convertNumber type="currency" currencySymbol="€" pattern="####.##¤"/>
+                </h:inputText>
+                <h:message for="preis" styleClass="errormessage"/>
+                
+                <h:outputLabel for="verfuegbar" value="Verfügbar ab:"/>
+                <h:inputText id="verfuegbar" value="#{artikelController.artikel.verfuegbarAb}">
+                    <f:convertDateTime pattern="dd.MM.yy"/>
+                </h:inputText>
+                <h:message for="verfuegbar" styleClass="errormessage"/>
+                
+                <h:outputLabel for="bildname" value="Bild-Datei:"/>
+                <h:inputText id="bildname" value="#{artikelController.artikel.artikelImage}">
+                    <f:validateRegex pattern="[A-Za-z0-9-]+.(jpg|jpeg|png|gif)" />
+                    <p:ajax event="keyup" update="bild"/>
+                </h:inputText>
+                <h:message for="bildname" styleClass="errormessage"/>
+                
+                <h:outputLabel for="bild" value="Bild:"/>
+                <h:graphicImage id="bild" url="#{artikelController.artikel.artikelImage}"/>
+                <h:message for="bild" styleClass="errormessage"/>
+                
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
