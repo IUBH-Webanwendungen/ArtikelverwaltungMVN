@@ -9,10 +9,14 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.util.Date;
+
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.transaction.Transaction;
 
 /**
  *
@@ -26,12 +30,13 @@ public class Shop {
     private List<Benutzer> kundenstamm = new ArrayList<Benutzer>();
     private static Shop instance = new Shop();
     private static EntityManagerFactory emf;
-    
+
     /**
      * Creates a new instance of Shop
      */
     public Shop() {
         try {
+            System.err.println("Starting entityManager.");
             emf = Persistence.createEntityManagerFactory("onlineshop");
             System.err.println("Connection successful");
         } catch (Throwable t) {
@@ -45,16 +50,26 @@ public class Shop {
         sortiment.add(new Artikel("T-Shirt", 973526141,1,"Neu","T-Shirt.png",new Date(), 4.99d));
         sortiment.add(new Artikel("Schuhe", 192837464,1,"Neu","Schuhe.png",new Date(), 29.99d));
         sortiment.add(new Artikel("Hut", 192837465,1,"Neu","Hut.jpg",new Date(), 12.99d));
-        
+
+        EntityTransaction t = null;
         try {
             EntityManager em = emf.createEntityManager();
-            if(em.find(Artikel.class, 123456780)==null) {
+            List<Artikel> alreadyThere =
+                    em.createQuery("select a from Artikel a", Artikel.class).getResultList();
+            if(alreadyThere ==null || alreadyThere.size()==0) {
+                System.err.println("Restarting the sortiment...");
+                t = em.getTransaction();
+                t.begin();
                 for(Artikel a: sortiment) {
                     em.persist(a);
                 }
+                t.commit();
+                em.close();
+                System.err.println("Inserted "+sortiment.size()+" Artikeln...");
             }
-        } catch(Throwable t) {
-            t.printStackTrace();
+        } catch(Throwable thr) {
+            thr.printStackTrace();
+            if(t!=null && t.isActive()) t.rollback();
         }
                 
        
@@ -73,8 +88,7 @@ public class Shop {
     }
     
     public List<Artikel> getSortiment() {
-        return sortiment;
-        /*
+        //return sortiment;
         EntityManager em = emf.createEntityManager();
         
         Query q = em.createQuery("select a from Artikel a");
@@ -82,7 +96,6 @@ public class Shop {
         em.close();
         System.out.println("Got " + artikel.size() + " articles.");
         return artikel;
-*/
     }
     
     public List<Benutzer> getBenutzer() {

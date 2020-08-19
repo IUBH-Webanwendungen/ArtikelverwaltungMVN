@@ -25,7 +25,7 @@ public class Artikel {
     public Artikel() {
 
     }
-    
+
     public Artikel(String na, int an, int a, String bes, String aI,Date datum, double pr){
         this.nameArtikel = na;
         this.artikelNr = an;
@@ -35,7 +35,7 @@ public class Artikel {
         this.verfuegbarAb = datum;
         this.preis = pr;
     }
-    
+
     //Getter und Setter Methoden
     public String getNameArtikel() {
         return this.nameArtikel;
@@ -44,6 +44,7 @@ public class Artikel {
     public int getArtikelNr() {
         return this.artikelNr;
     }
+
     public int getAnzahl() {
         return this.anzahl;
     }
